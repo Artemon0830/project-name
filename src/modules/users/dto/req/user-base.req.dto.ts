@@ -14,7 +14,7 @@ import {
   Min, Validate, ValidateIf,
   ValidateNested,
 } from 'class-validator';
-import { transformHelper, TransformHelper } from '../../../common/helpers/transform.helper';
+import { TransformHelper } from '../../../../common/helpers/transform.helper';
 import { EnumGender } from '../../enums/gender.enum';
 
 export class CarBaseReqDto {

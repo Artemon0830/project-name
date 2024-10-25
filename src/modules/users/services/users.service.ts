@@ -2,17 +2,21 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
 import { Config } from '../../../configs/config.type';
+import { UserRepository } from '../../repository/user.repository';
 import { CreateUserReqDto } from '../dto/req/create-user.req.dto';
 import { UpdateUserReqDto } from '../dto/req/update-user.req.dto';
 import { UserResDto } from '../dto/res/user.res.dto';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly configService: ConfigService<Config>) {}
+  constructor(
+    private readonly configService: ConfigService<Config>,
+    private userRepository: UserRepository,
+  ) {}
   public async create(createUserDto: CreateUserReqDto): Promise<UserResDto> {
     const appConfig = this.configService.get<Config>('database');
     throw new ForbiddenException('safas');
-    console.log(appConfig);
+
     return {} as UserResDto;
   }
 

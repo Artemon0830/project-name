@@ -1,21 +1,10 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-  Query,
-} from '@nestjs/common';
-import { ApiBearerAuth, ApiConflictResponse, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, Param, Patch } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
-import { CreateUserReqDto } from './dto/req/create-user.req.dto';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
+import { IUserData } from '../auth/interfaces/user-data.interface';
 import { UpdateUserReqDto } from './dto/req/update-user.req.dto';
-import { UserListReqDto } from './dto/req/user-list.req.dto';
-import { UserResDto } from './dto/res/user.res.dto';
 import { UsersService } from './services/users.service';
-
 
 @ApiTags('Users')
 @Controller('users')
@@ -23,29 +12,27 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @ApiBearerAuth()
-  @ApiConflictResponse({ description: 'Conflict' })
-  @Post()
-  async create(@Body() createUserDto: CreateUserReqDto): Promise<UserResDto> {
-    return await this.usersService.create(createUserDto);
+  @Get('me')
+  public async findMe(@CurrentUser() userData: IUserData) {
+    return await this.usersService.findMe(userData);
   }
-
-  @Get()
-  findAll(@Query() query: UserListReqDto) {
-    return this.usersService.findAll();
+  @ApiBearerAuth()
+  @Patch('me')
+  public async updateMe(
+    @CurrentUser() userData: IUserData,
+    @Body() updateUserDto: UpdateUserReqDto,
+  ) {
+    return await this.usersService.updateMe(userData, updateUserDto);
   }
-
+  @ApiBearerAuth()
+  @Delete('me')
+  public async removeMe(@CurrentUser() userData: IUserData) {
+    return await this.usersService.removeMe(userData);
+  }
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
+  public async findOne(@Param('id') id: string) {
+    return await this.usersService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserReqDto) {
-    return this.usersService.update(+id, updateUserDto);
-  }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
-  }
 }

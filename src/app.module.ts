@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_FILTER } from '@nestjs/core';
-import { GlobalExceptionFilter } from './common/filter/global-exception.filter';
 
+import { GlobalExceptionFilter } from './common/filter/global-exception.filter';
 import configuration from './configs/configuration';
 import { ArticlesModule } from './modules/articles/articles.module';
+import { AuthModule } from './modules/auth/auth.module';
 import { CommentsModule } from './modules/comments/comments.module';
 import { LoggerModule } from './modules/logger/logger.module';
 import { PostgresModule } from './modules/postgres/postgres.module';
@@ -14,6 +15,7 @@ import { UsersModule } from './modules/users/users.module';
 
 @Module({
   imports: [
+    AuthModule,
     LoggerModule,
     ArticlesModule,
     UsersModule,
